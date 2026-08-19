@@ -154,6 +154,46 @@ class LMStudioProvider(LLMProvider):
         return "lmstudio"
 
 
+class OpenAIProvider(LLMProvider):
+    """OpenAI-compatible LLM provider."""
+
+    def __init__(self, base_url: str | None = None, model: str | None = None, api_key: str | None = None):
+        settings = get_settings()
+        self.base_url = (base_url or settings.openai_base_url).rstrip("/")
+        self.model = model or settings.openai_model
+        self.api_key = api_key or settings.openai_api_key
+
+    async def generate(self, system_prompt: str, user_prompt: str) -> str:
+        url = f"{self.base_url}/chat/completions"
+        payload = {
+            "model": self.model,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            "temperature": 0.0,
+            "max_tokens": 400,
+            "stream": False
+        }
+        headers = {
+            "Content-Type": "application/json", 
+            "Authorization": f"Bearer {self.api_key}",
+            "HTTP-Referer": "http://localhost:3000",
+            "X-Title": "CareGPS"
+        }
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            resp = await client.post(url, json=payload, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            choices = data.get("choices", [])
+            if not choices:
+                return ""
+            return choices[0].get("message", {}).get("content", "")
+
+    def provider_name(self) -> str:
+        return "openai"
+
+
 # ────────────────────────────────────────────────────────────────
 # Deterministic fallback parser
 # ────────────────────────────────────────────────────────────────
@@ -333,6 +373,8 @@ def create_llm_provider() -> LLMProvider | None:
         return OllamaProvider()
     if settings.llm_provider == "lmstudio":
         return LMStudioProvider()
-    # Future: openai, anthropic, gemini
+    if settings.llm_provider == "openai":
+        return OpenAIProvider()
+    # Future: anthropic, gemini
     logger.warning("Unknown LLM provider: %s", settings.llm_provider)
     return None

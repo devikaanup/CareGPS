@@ -45,6 +45,8 @@ class Settings(BaseSettings):
         description="LM Studio model name (optional, will use loaded model if empty)",
     )
     openai_api_key: str = Field(default="", description="OpenAI API key")
+    openai_base_url: str = Field(default="https://api.openai.com/v1", description="OpenAI base URL")
+    openai_model: str = Field(default="gpt-4o", description="OpenAI model name")
     anthropic_api_key: str = Field(default="", description="Anthropic API key")
     gemini_api_key: str = Field(default="", description="Gemini API key")
 

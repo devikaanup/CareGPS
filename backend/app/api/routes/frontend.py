@@ -106,8 +106,8 @@ async def plan_frontend_route(request: FrontendRequest):
         if is_fastest and "Fastest route" not in why_list:
             why_list.insert(0, "Fastest route")
             
-        # Limit to top 3 reasons to keep UI clean
-        why_list = why_list[:3] if why_list else ["Standard route"]
+        # Remove the limit to top 3 reasons so all user preferences show
+        why_list = why_list if why_list else ["Standard route"]
 
         # If it's the fastest, update the badge to clearly show it
         badge, emoji = get_badge_and_emoji(r)
