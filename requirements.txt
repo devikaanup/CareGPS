@@ -1,0 +1,13 @@
+# RouteEase Backend Dependencies
+fastapi==0.115.12
+uvicorn[standard]==0.34.2
+pydantic==2.11.3
+pydantic-settings==2.9.1
+httpx==0.28.1
+python-dotenv==1.1.0
+polyline==2.0.2
+
+# Testing
+pytest==8.4.0
+pytest-asyncio==1.0.0
+httpx  # also used as test client
