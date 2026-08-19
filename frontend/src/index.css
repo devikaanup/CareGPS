@@ -9,6 +9,7 @@
 }
 
 html {
+
   font-size: calc(100% * var(--font-scale));
 }
 
@@ -44,6 +45,7 @@ html {
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {

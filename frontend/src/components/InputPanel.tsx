@@ -77,8 +77,8 @@ export function InputPanel({ onSubmit }: InputPanelProps) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!challenge.trim() && !origin.trim() && !destination.trim()) {
-      setError('Tell us about your challenge, or add an origin and destination to get a route.');
+    if (!origin.trim() || !destination.trim()) {
+      setError('Please provide both a starting point and a destination to get a route.');
       return;
     }
     setError('');

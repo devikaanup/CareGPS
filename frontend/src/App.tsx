@@ -242,14 +242,14 @@ function ResultsView({
         {/* Route options */}
         <div className="lg:col-span-2 space-y-4">
           <h2 className="font-hand text-2xl text-ink">Choose a route</h2>
-          
+
           {loading && (
             <div className="p-6 bg-paper-200 rounded-doodle border-[2.5px] border-ink text-center">
               <p className="font-hand text-xl text-ink animate-pulse">Consulting the maps...</p>
               <p className="text-sm text-ink-soft mt-2">Connecting to local AI and routing services.</p>
             </div>
           )}
-          
+
           {error && (
             <div className="p-4 bg-red-50 text-red-700 rounded-doodle border-[2.5px] border-red-200 mb-4">
               {error}
