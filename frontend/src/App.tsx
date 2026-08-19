@@ -12,6 +12,8 @@ import { applyFontSize, type FontSize } from '@/lib/fontSize';
 
 type View = 'dashboard' | 'results';
 
+const API_BASE = import.meta.env.VITE_API_URL || "https://hackathon-copy.onrender.com";
+
 function App() {
   const [view, setView] = useState<View>('dashboard');
   const [fontSize, setFontSize] = useState<FontSize>('medium');
@@ -45,7 +47,7 @@ function App() {
     setRealRoutes(null);
 
     try {
-      const response = await fetch('/api/routes/frontend', {
+      const response = await fetch(`${API_BASE}/api/routes/frontend`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
