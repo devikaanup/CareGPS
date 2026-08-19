@@ -45,7 +45,7 @@ function App() {
     setRealRoutes(null);
 
     try {
-      const response = await fetch('http://localhost:8000/api/routes/frontend', {
+      const response = await fetch('/api/routes/frontend', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
