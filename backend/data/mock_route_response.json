@@ -1,0 +1,212 @@
+{
+  "request_id": "demo_req_001",
+  "challenge": {
+    "raw_text": "I'm a new driver and highways make me nervous.",
+    "parsed_constraints": {
+      "avoid_highways": true,
+      "avoid_tolls": false,
+      "avoid_ferries": false,
+      "avoid_unpaved": false,
+      "avoid_potholes": false,
+      "avoid_roadblocks": false,
+      "avoid_complex_intersections": true,
+      "avoid_roundabouts": false,
+      "avoid_heavy_merges": true,
+      "avoid_high_traffic": false,
+      "avoid_unlit_roads": false,
+      "needs_rest_stops": false,
+      "needs_accessible_restrooms": false,
+      "needs_pharmacy": false,
+      "needs_hospital": false,
+      "needs_fuel": false,
+      "needs_ev_charging": false,
+      "mobility_level": "full",
+      "driving_experience": "learner",
+      "vision_sensitivity": false,
+      "priority": "safety",
+      "confidence": 0.85,
+      "reasoning_summary": "User is a new driver who is nervous about highways."
+    }
+  },
+  "recommendation": {
+    "route_id": "route_002",
+    "reason": "Avoids highways and difficult merges while adding only 4 minutes. No hazards detected along route. Suitable rest stop available."
+  },
+  "routes": [
+    {
+      "route_id": "route_001",
+      "label": "Fastest",
+      "recommended": false,
+      "distance_meters": 8200.0,
+      "duration_seconds": 1380.0,
+      "traffic": {
+        "available": true,
+        "level": "high",
+        "delay_seconds": 360,
+        "source": "demo"
+      },
+      "scores": {
+        "overall": 58.2,
+        "safety": 52.0,
+        "accessibility": 65.0,
+        "comfort": 45.0,
+        "traffic": 60.0,
+        "convenience": 70.0,
+        "time": 95.0
+      },
+      "hazards": [
+        {
+          "hazard": {
+            "id": "HZ-001",
+            "type": "pothole",
+            "severity": "high",
+            "latitude": 13.058,
+            "longitude": 80.249,
+            "radius_meters": 35.0,
+            "description": "Large pothole on Inner Ring Road near Kotturpuram",
+            "confidence": 0.91,
+            "reported_at": "2026-08-18T10:30:00Z",
+            "status": "active"
+          },
+          "distance_from_route_meters": 12.3,
+          "penalty": 13.65
+        },
+        {
+          "hazard": {
+            "id": "HZ-002",
+            "type": "pothole",
+            "severity": "medium",
+            "latitude": 13.072,
+            "longitude": 80.251,
+            "radius_meters": 20.0,
+            "description": "Medium pothole near Teynampet junction",
+            "confidence": 0.78,
+            "reported_at": "2026-08-17T14:15:00Z",
+            "status": "active"
+          },
+          "distance_from_route_meters": 45.7,
+          "penalty": 5.46
+        }
+      ],
+      "pitstops": [],
+      "advantages": [
+        "Fastest route"
+      ],
+      "disadvantages": [
+        "Route includes highway segment(s)",
+        "2 pothole report(s) along route",
+        "Heavy traffic (6 min delay)"
+      ],
+      "warnings": [
+        "Highway merge required \u2014 may be challenging for new drivers"
+      ],
+      "polyline": "m~nAa`x~MtBbCxDfEhCpBzAlAnB~BjCzCnBrBp@r@"
+    },
+    {
+      "route_id": "route_002",
+      "label": "Recommended",
+      "recommended": true,
+      "distance_meters": 9100.0,
+      "duration_seconds": 1620.0,
+      "traffic": {
+        "available": true,
+        "level": "moderate",
+        "delay_seconds": 120,
+        "source": "demo"
+      },
+      "scores": {
+        "overall": 91.5,
+        "safety": 96.0,
+        "accessibility": 92.0,
+        "comfort": 94.0,
+        "traffic": 85.0,
+        "convenience": 82.0,
+        "time": 78.0
+      },
+      "hazards": [],
+      "pitstops": [
+        {
+          "place_id": "demo_cafe_001",
+          "name": "Adyar Ananda Bhavan (T. Nagar)",
+          "category": "cafe",
+          "latitude": 13.0401,
+          "longitude": 80.2339,
+          "distance_from_route_meters": 0.0,
+          "rating": 4.3,
+          "accessibility_info": null,
+          "source": "demo"
+        }
+      ],
+      "advantages": [
+        "Avoids highways",
+        "No major pothole reports",
+        "No active roadblocks",
+        "Low traffic conditions",
+        "1 relevant pitstop(s) available"
+      ],
+      "disadvantages": [
+        "4 minute(s) slower than the fastest route"
+      ],
+      "warnings": [],
+      "polyline": "m~nAa`x~MhA`BfBtCnCpDdBbCpAfBjBzCxAtBtAvBjBbC"
+    },
+    {
+      "route_id": "route_003",
+      "label": "Alternative",
+      "recommended": false,
+      "distance_meters": 8800.0,
+      "duration_seconds": 1500.0,
+      "traffic": {
+        "available": true,
+        "level": "moderate",
+        "delay_seconds": 180,
+        "source": "demo"
+      },
+      "scores": {
+        "overall": 44.3,
+        "safety": 35.0,
+        "accessibility": 55.0,
+        "comfort": 50.0,
+        "traffic": 75.0,
+        "convenience": 60.0,
+        "time": 85.0
+      },
+      "hazards": [
+        {
+          "hazard": {
+            "id": "HZ-003",
+            "type": "roadblock",
+            "severity": "critical",
+            "latitude": 13.065,
+            "longitude": 80.258,
+            "radius_meters": 100.0,
+            "description": "Road closed for metro construction on Anna Salai",
+            "confidence": 0.98,
+            "reported_at": "2026-08-18T06:00:00Z",
+            "status": "active"
+          },
+          "distance_from_route_meters": 25.0,
+          "penalty": 49.0
+        }
+      ],
+      "pitstops": [],
+      "advantages": [
+        "No major pothole reports"
+      ],
+      "disadvantages": [
+        "2 minute(s) slower than the fastest route"
+      ],
+      "warnings": [
+        "1 active roadblock(s) on route"
+      ],
+      "polyline": "m~nAa`x~MjClDnBrCxAdBpBnCdCjDlBrC~ArBhBdC"
+    }
+  ],
+  "metadata": {
+    "routing_source": "demo",
+    "traffic_source": "demo",
+    "places_source": "demo",
+    "hazard_source": "demo",
+    "parser_source": "demo"
+  }
+}

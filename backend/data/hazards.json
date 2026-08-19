@@ -1,0 +1,122 @@
+[
+  {
+    "id": "HZ-001",
+    "type": "pothole",
+    "severity": "high",
+    "latitude": 13.0580,
+    "longitude": 80.2490,
+    "radius_meters": 35,
+    "description": "Large pothole on Inner Ring Road near Kotturpuram",
+    "confidence": 0.91,
+    "reported_at": "2026-08-18T10:30:00Z",
+    "status": "active"
+  },
+  {
+    "id": "HZ-002",
+    "type": "pothole",
+    "severity": "medium",
+    "latitude": 13.0720,
+    "longitude": 80.2510,
+    "radius_meters": 20,
+    "description": "Medium pothole near Teynampet junction",
+    "confidence": 0.78,
+    "reported_at": "2026-08-17T14:15:00Z",
+    "status": "active"
+  },
+  {
+    "id": "HZ-003",
+    "type": "roadblock",
+    "severity": "critical",
+    "latitude": 13.0650,
+    "longitude": 80.2580,
+    "radius_meters": 100,
+    "description": "Road closed for metro construction on Anna Salai",
+    "confidence": 0.98,
+    "reported_at": "2026-08-18T06:00:00Z",
+    "status": "active"
+  },
+  {
+    "id": "HZ-004",
+    "type": "construction",
+    "severity": "medium",
+    "latitude": 13.0760,
+    "longitude": 80.2620,
+    "radius_meters": 50,
+    "description": "Road widening work near Nungambakkam",
+    "confidence": 0.85,
+    "reported_at": "2026-08-16T09:00:00Z",
+    "status": "active"
+  },
+  {
+    "id": "HZ-005",
+    "type": "unpaved_segment",
+    "severity": "medium",
+    "latitude": 13.0550,
+    "longitude": 80.2300,
+    "radius_meters": 80,
+    "description": "Unpaved stretch near Saidapet canal road",
+    "confidence": 0.72,
+    "reported_at": "2026-08-15T11:00:00Z",
+    "status": "active"
+  },
+  {
+    "id": "HZ-006",
+    "type": "flooded_road",
+    "severity": "high",
+    "latitude": 13.0700,
+    "longitude": 80.2400,
+    "radius_meters": 60,
+    "description": "Waterlogging reported near T. Nagar during rains",
+    "confidence": 0.65,
+    "reported_at": "2026-08-18T08:00:00Z",
+    "status": "active"
+  },
+  {
+    "id": "HZ-007",
+    "type": "dangerous_intersection",
+    "severity": "high",
+    "latitude": 13.0780,
+    "longitude": 80.2680,
+    "radius_meters": 40,
+    "description": "Accident-prone 5-way junction at Gemini Flyover",
+    "confidence": 0.88,
+    "reported_at": "2026-08-14T12:00:00Z",
+    "status": "active"
+  },
+  {
+    "id": "HZ-008",
+    "type": "pothole",
+    "severity": "high",
+    "latitude": 13.0480,
+    "longitude": 80.2350,
+    "radius_meters": 30,
+    "description": "Cluster of potholes on Guindy bypass road",
+    "confidence": 0.82,
+    "reported_at": "2026-08-17T16:30:00Z",
+    "status": "active"
+  },
+  {
+    "id": "HZ-009",
+    "type": "roadblock",
+    "severity": "high",
+    "latitude": 13.0600,
+    "longitude": 80.2350,
+    "radius_meters": 75,
+    "description": "Political rally road closure near Mambalam",
+    "confidence": 0.90,
+    "reported_at": "2026-08-18T15:00:00Z",
+    "status": "active"
+  },
+  {
+    "id": "HZ-010",
+    "type": "construction",
+    "severity": "low",
+    "latitude": 13.0850,
+    "longitude": 80.2750,
+    "radius_meters": 30,
+    "description": "Minor road repair near Egmore station",
+    "confidence": 0.70,
+    "reported_at": "2026-08-18T09:30:00Z",
+    "status": "active"
+  }
+]
