@@ -1,8 +1,8 @@
-# CareGPT
+# CareGPS
 
 > **"Routes built around you, not just the fastest route."**
 
-Navigation for people with disabilities, elderly users, new drivers, and women. Instead of optimizing only for speed, CareGPT considers user-specific challenges to recommend the most suitable route.
+Navigation for people with disabilities, elderly users, new drivers, and women. Instead of optimizing only for speed, CareGPS considers user-specific challenges to recommend the most suitable route.
 
 ---
 
