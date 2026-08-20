@@ -230,6 +230,45 @@ class GeminiProvider(LLMProvider):
         return "gemini"
 
 
+class OpenRouterProvider(LLMProvider):
+    """OpenRouter API provider (uses OpenAI compatible API)."""
+
+    def __init__(self, api_key: str | None = None, model: str | None = None):
+        settings = get_settings()
+        self.api_key = api_key or settings.openrouter_api_key
+        self.model = model or settings.openrouter_model
+        self.base_url = "https://openrouter.ai/api/v1"
+
+    async def generate(self, system_prompt: str, user_prompt: str) -> str:
+        url = f"{self.base_url}/chat/completions"
+        payload = {
+            "model": self.model,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            "temperature": 0.0,
+            "stream": False
+        }
+        headers = {
+            "Content-Type": "application/json", 
+            "Authorization": f"Bearer {self.api_key}",
+            "HTTP-Referer": "http://localhost:3000",
+            "X-Title": "CareGPS"
+        }
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            resp = await client.post(url, json=payload, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            choices = data.get("choices", [])
+            if not choices:
+                return ""
+            return choices[0].get("message", {}).get("content", "")
+
+    def provider_name(self) -> str:
+        return "openrouter"
+
+
 # ────────────────────────────────────────────────────────────────
 # Deterministic fallback parser
 # ────────────────────────────────────────────────────────────────
@@ -415,6 +454,8 @@ def create_llm_provider() -> LLMProvider | None:
         return OpenAIProvider()
     if settings.llm_provider == "gemini":
         return GeminiProvider()
+    if settings.llm_provider == "openrouter":
+        return OpenRouterProvider()
     # Future: anthropic
     logger.warning("Unknown LLM provider: %s", settings.llm_provider)
     return None

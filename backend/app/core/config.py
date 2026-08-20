@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     # --- LLM Configuration ---
     llm_provider: str = Field(
         default="ollama",
-        description="LLM provider: ollama | lmstudio | openai | anthropic | gemini",
+        description="LLM provider: ollama | lmstudio | openai | anthropic | gemini | openrouter",
     )
     ollama_base_url: str = Field(
         default="http://localhost:11434",
@@ -49,6 +49,8 @@ class Settings(BaseSettings):
     openai_model: str = Field(default="gpt-4o", description="OpenAI model name")
     anthropic_api_key: str = Field(default="", description="Anthropic API key")
     gemini_api_key: str = Field(default="", description="Gemini API key")
+    openrouter_api_key: str = Field(default="", description="OpenRouter API key")
+    openrouter_model: str = Field(default="google/gemini-2.5-flash:free", description="OpenRouter model")
 
     # --- Server ---
     host: str = Field(default="0.0.0.0", description="Server host")
@@ -77,6 +79,8 @@ class Settings(BaseSettings):
             return bool(self.anthropic_api_key)
         if self.llm_provider == "gemini":
             return bool(self.gemini_api_key)
+        if self.llm_provider == "openrouter":
+            return bool(self.openrouter_api_key)
         return False
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
