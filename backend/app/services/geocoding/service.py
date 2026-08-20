@@ -24,10 +24,7 @@ class GeocodingService:
             raise GeocodingAPIError("Empty geocoding query")
 
         # Append local context to ensure it biases strictly to Chennai
-        # Only append if the user didn't already specify it
         search_query = query
-        if "chennai" not in query.lower() and "india" not in query.lower():
-            search_query = f"{query}, Chennai, India"
 
         params = {
             "q": search_query,
