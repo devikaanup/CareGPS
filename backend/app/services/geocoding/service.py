@@ -23,15 +23,14 @@ class GeocodingService:
         if not query or not query.strip():
             raise GeocodingAPIError("Empty geocoding query")
 
-        # Append local context to ensure it biases strictly to Chennai
+        # Append country context to ensure "Phoenix" doesn't resolve to Arizona, USA
         search_query = query
+        if "india" not in query.lower():
+            search_query = f"{query}, India"
 
         params = {
             "q": search_query,
-            "limit": 1,
-            # Bias results towards Chennai, India to prevent "Phoenix" from resolving to Arizona, USA
-            "lat": 13.0827,
-            "lon": 80.2707
+            "limit": 1
         }
         
         try:
