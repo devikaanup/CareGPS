@@ -194,6 +194,42 @@ class OpenAIProvider(LLMProvider):
         return "openai"
 
 
+class GeminiProvider(LLMProvider):
+    """Gemini API provider."""
+
+    def __init__(self, api_key: str | None = None):
+        settings = get_settings()
+        self.api_key = api_key or settings.gemini_api_key
+
+    async def generate(self, system_prompt: str, user_prompt: str) -> str:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={self.api_key}"
+        payload = {
+            "contents": [
+                {
+                    "role": "user",
+                    "parts": [
+                        {"text": system_prompt + "\n\n" + user_prompt}
+                    ]
+                }
+            ],
+            "generationConfig": {
+                "temperature": 0.1,
+                "responseMimeType": "application/json"
+            }
+        }
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            resp = await client.post(url, json=payload)
+            resp.raise_for_status()
+            data = resp.json()
+            try:
+                return data["candidates"][0]["content"]["parts"][0]["text"]
+            except (KeyError, IndexError):
+                return ""
+
+    def provider_name(self) -> str:
+        return "gemini"
+
+
 # ────────────────────────────────────────────────────────────────
 # Deterministic fallback parser
 # ────────────────────────────────────────────────────────────────
@@ -201,44 +237,46 @@ class OpenAIProvider(LLMProvider):
 _KEYWORD_MAP: list[tuple[list[str], dict]] = [
     # Mobility
     (["walker", "walking frame", "walking aid"], {"mobility_level": "limited", "avoid_unpaved": True, "avoid_potholes": True, "priority": "accessibility"}),
-    (["wheelchair"], {"mobility_level": "wheelchair", "avoid_unpaved": True, "avoid_potholes": True, "needs_accessible_restrooms": True, "priority": "accessibility"}),
-    (["crutch", "crutches"], {"mobility_level": "limited", "avoid_unpaved": True, "avoid_potholes": True, "priority": "accessibility"}),
-    (["mobility", "limited mobility"], {"mobility_level": "limited", "avoid_potholes": True, "priority": "accessibility"}),
-    (["curb", "high curb", "bad road", "rough road"], {"avoid_unpaved": True, "avoid_potholes": True}),
+    (["wheelchair", "disabled", "accessible", "wheel chair", "ramp"], {"mobility_level": "wheelchair", "avoid_unpaved": True, "avoid_potholes": True, "needs_accessible_restrooms": True, "priority": "accessibility"}),
+    (["crutch", "crutches", "cane", "walking stick"], {"mobility_level": "limited", "avoid_unpaved": True, "avoid_potholes": True, "priority": "accessibility"}),
+    (["mobility", "limited mobility", "hard to walk"], {"mobility_level": "limited", "avoid_potholes": True, "priority": "accessibility"}),
+    (["curb", "high curb", "bad road", "rough road", "bumpy", "potholes", "pothole", "uneven", "unpaved", "dirt road", "gravel"], {"avoid_unpaved": True, "avoid_potholes": True}),
 
     # Driving experience
-    (["new driver", "learner", "just started driving", "learning to drive", "beginner driver"], {"driving_experience": "learner", "avoid_highways": True, "avoid_heavy_merges": True, "avoid_complex_intersections": True, "priority": "safety"}),
-    (["highway", "highways", "motorway"], {"avoid_highways": True}),
-    (["merge", "merging", "heavy merge"], {"avoid_heavy_merges": True}),
-    (["roundabout", "roundabouts", "traffic circle"], {"avoid_roundabouts": True}),
-    (["complex intersection", "complicated intersection", "busy junction"], {"avoid_complex_intersections": True}),
+    (["new driver", "learner", "just started driving", "learning to drive", "beginner driver", "new to driving", "novice", "anxious driver", "scared to drive", "nervous", "first time driving"], {"driving_experience": "learner", "avoid_highways": True, "avoid_heavy_merges": True, "avoid_complex_intersections": True, "priority": "safety"}),
+    (["highway", "highways", "motorway", "freeway", "expressway", "interstate", "fast traffic", "scared of trucks"], {"avoid_highways": True, "avoid_heavy_merges": True}),
+    (["merge", "merging", "heavy merge", "changing lanes"], {"avoid_heavy_merges": True}),
+    (["roundabout", "roundabouts", "traffic circle", "rotary"], {"avoid_roundabouts": True}),
+    (["complex intersection", "complicated intersection", "busy junction", "hard turns", "difficult intersection"], {"avoid_complex_intersections": True}),
 
-    # Vision
-    (["night", "dark", "can't see", "poor vision", "vision", "night vision", "night driving", "unlit"], {"vision_sensitivity": True, "avoid_unlit_roads": True}),
+    # Vision / Environment
+    (["night", "dark", "can't see", "poor vision", "vision", "night vision", "night driving", "unlit", "astigmatism", "harsh lighting", "headlights", "glare", "blind", "glasses"], {"vision_sensitivity": True, "avoid_unlit_roads": True, "avoid_high_traffic": True}),
+    
+    # Safety
+    (["woman", "women", "girl", "safety", "safe", "scared", "alone", "solo"], {"avoid_unlit_roads": True, "priority": "safety"}),
 
     # Elderly
-    (["elderly", "senior", "old age", "aging"], {"priority": "comfort", "avoid_high_traffic": True}),
+    (["elderly", "senior", "old age", "aging", "old", "grandma", "grandpa", "slow driver"], {"priority": "comfort", "avoid_high_traffic": True, "avoid_heavy_merges": True}),
 
     # Needs
-    (["rest", "rest stop", "break", "stop and rest", "take a break"], {"needs_rest_stops": True}),
-    (["pharmacy", "medicine", "medication"], {"needs_pharmacy": True}),
-    (["hospital", "emergency", "medical"], {"needs_hospital": True}),
-    (["fuel", "gas", "petrol", "gas station", "fuel station"], {"needs_fuel": True}),
-    (["ev", "electric", "charging", "ev charging", "charge"], {"needs_ev_charging": True}),
-    (["restroom", "toilet", "bathroom", "accessible restroom"], {"needs_accessible_restrooms": True}),
+    (["rest", "rest stop", "break", "stop and rest", "take a break", "tiring", "tired", "long drive", "sleepy", "fatigue"], {"needs_rest_stops": True, "priority": "comfort"}),
+    (["pharmacy", "medicine", "medication", "pill", "chemist", "drugstore"], {"needs_pharmacy": True}),
+    (["hospital", "emergency", "medical", "clinic", "doctor", "pregnant", "pregnancy"], {"needs_hospital": True, "priority": "safety"}),
+    (["fuel", "gas", "petrol", "gas station", "fuel station", "diesel"], {"needs_fuel": True}),
+    (["ev", "electric", "charging", "ev charging", "charge", "tesla", "battery"], {"needs_ev_charging": True}),
+    (["restroom", "toilet", "bathroom", "accessible restroom", "washroom", "pee", "loo", "urinal"], {"needs_accessible_restrooms": True}),
+    (["food", "eat", "hungry", "snack", "cafe", "restaurant", "coffee", "drink"], {"needs_rest_stops": True}),
 
     # Traffic
-    (["traffic", "busy road", "congestion", "calm road", "calmer", "quiet road"], {"avoid_high_traffic": True}),
+    (["traffic", "busy road", "congestion", "calm road", "calmer", "quiet road", "jam", "rush hour", "peaceful", "scenic", "relaxing", "trees", "nature"], {"avoid_high_traffic": True, "priority": "comfort"}),
 
-    # Road types
-    (["pothole", "potholes", "bumpy"], {"avoid_potholes": True}),
-    (["roadblock", "road block", "blocked"], {"avoid_roadblocks": True}),
-    (["unpaved", "dirt road", "gravel"], {"avoid_unpaved": True}),
-    (["toll", "toll road"], {"avoid_tolls": True}),
-    (["ferry"], {"avoid_ferries": True}),
+    # Routing exclusions
+    (["roadblock", "road block", "blocked", "closure", "closed"], {"avoid_roadblocks": True}),
+    (["toll", "toll road", "tolls", "pay"], {"avoid_tolls": True}),
+    (["ferry", "ferries", "boat"], {"avoid_ferries": True}),
 
     # Speed priority
-    (["fast", "fastest", "quickly", "hurry", "rush", "quick", "asap", "as quickly as possible"], {"priority": "speed"}),
+    (["fast", "fastest", "quickly", "hurry", "rush", "quick", "asap", "as quickly as possible", "late", "urgent"], {"priority": "speed"}),
 ]
 
 
@@ -375,6 +413,8 @@ def create_llm_provider() -> LLMProvider | None:
         return LMStudioProvider()
     if settings.llm_provider == "openai":
         return OpenAIProvider()
-    # Future: anthropic, gemini
+    if settings.llm_provider == "gemini":
+        return GeminiProvider()
+    # Future: anthropic
     logger.warning("Unknown LLM provider: %s", settings.llm_provider)
     return None
