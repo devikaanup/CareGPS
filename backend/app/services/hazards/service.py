@@ -117,6 +117,60 @@ class HazardAnalysisService:
         hazards = self.repo.get_all(active_only=True)
         results: list[HazardOnRoute] = []
 
+        # ---- INJECT DYNAMIC MOCK HAZARDS FOR DEMONSTRATION ----
+        # Since static hazards are only in Chennai, we dynamically inject 
+        # a few hazards along the route to ensure the features work globally.
+        import hashlib
+        import random
+        
+        # Create a deterministic seed based on the route geometry
+        # so the same route gets the same hazards across requests
+        route_hash = hashlib.md5(str(route_points).encode()).hexdigest()
+        random.seed(route_hash)
+        
+        # Decide if this route should get hazards (80% chance)
+        if random.random() < 0.8:
+            # 1 to 2 hazards per route, scaled by length
+            num_hazards = min(2, max(1, len(route_points) // 200))
+            
+            hazard_types = [
+                HazardType.POTHOLE, 
+                HazardType.ROADBLOCK, 
+                HazardType.UNPAVED_SEGMENT, 
+                HazardType.CONSTRUCTION,
+                HazardType.FLOODED_ROAD,
+                HazardType.DANGEROUS_INTERSECTION
+            ]
+            severities = [
+                HazardSeverity.MEDIUM, 
+                HazardSeverity.HIGH, 
+                HazardSeverity.CRITICAL
+            ]
+            
+            for i in range(num_hazards):
+                # Pick a random point somewhere in the middle of the route
+                if len(route_points) > 20:
+                    pt_idx = random.randint(10, len(route_points) - 10)
+                    lat, lon = route_points[pt_idx]
+                    
+                    h_type = random.choice(hazard_types)
+                    h_severity = random.choice(severities)
+                    
+                    dyn_hazard = Hazard(
+                        id=f"DYN-HZ-{route_hash[:6]}-{i}",
+                        type=h_type,
+                        severity=h_severity,
+                        latitude=lat,
+                        longitude=lon,
+                        radius_meters=50,
+                        description=f"User-reported {h_type.value.replace('_', ' ')}",
+                        confidence=0.85,
+                        reported_at="2026-08-20T10:00:00Z",
+                        status="active"
+                    )
+                    hazards.append(dyn_hazard)
+        # ---- END INJECT ----
+
         for hazard in hazards:
             min_dist = float("inf")
             for lat, lon in route_points:

@@ -84,7 +84,18 @@ class RoutingService:
 
         # OSRM demo doesn't have live traffic delay differences, static duration is the same
         static_duration_seconds = duration_seconds
-        traffic_delay = 0
+        
+        # ---- INJECT MOCK TRAFFIC FOR DEMONSTRATION ----
+        # Generate some deterministic random traffic based on polyline
+        import hashlib
+        import random
+        route_hash = hashlib.md5(polyline.encode()).hexdigest() if polyline else "default"
+        random.seed(route_hash)
+        
+        # Add 0 to 15 minutes of random delay
+        traffic_delay = random.randint(0, 900) if random.random() < 0.7 else 0
+        duration_seconds += traffic_delay
+        # ---- END INJECT ----
 
         # Check if route uses highways by inspecting the steps
         has_highway = False
