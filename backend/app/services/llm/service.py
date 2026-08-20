@@ -248,7 +248,8 @@ class OpenRouterProvider(LLMProvider):
                 {"role": "user", "content": user_prompt}
             ],
             "temperature": 0.0,
-            "stream": False
+            "stream": False,
+            "reasoning": {"enabled": True}
         }
         headers = {
             "Content-Type": "application/json", 

@@ -50,7 +50,7 @@ class Settings(BaseSettings):
     anthropic_api_key: str = Field(default="", description="Anthropic API key")
     gemini_api_key: str = Field(default="", description="Gemini API key")
     openrouter_api_key: str = Field(default="", description="OpenRouter API key")
-    openrouter_model: str = Field(default="google/gemini-2.5-flash:free", description="OpenRouter model")
+    openrouter_model: str = Field(default="poolside/laguna-s-2.1:free", description="OpenRouter model")
 
     # --- Server ---
     host: str = Field(default="0.0.0.0", description="Server host")
